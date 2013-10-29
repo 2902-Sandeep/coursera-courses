@@ -10,6 +10,7 @@
 #include <vector>
 #include <utility>
 #include <unordered_map>
+#include <limits>
 #include <chrono>
 #include <random>
 
@@ -19,50 +20,77 @@ class UndirectedGraph
 {
 public:
   // Constructor.
-  UndirectedGraph(double density, double minDistance, double maxDistance);
+  // @param numNodes The number of nodes in this graph.
+  // @param density The edge density of this graph, from 0.0 to 1.0.
+  // @param distRange The edge distance range (min and max values).
+  UndirectedGraph(int numNodes, double density, pair<double, double> distRange);
 
-  // Destructor.
-  ~UndirectedGraph();
+  // Returns the number of nodes in this graph.
+  // @return The number of nodes in this graph.
+  inline int getNumNodes();
 
-  // Returns the number of vertices in the graph.
-  inline int get_num_vertices();
+  // Returns the number of edges in this graph.
+  // @return The number of edges in this graph.
+  inline int getNumEdges();
 
-  // Returns the number of edges in the graph.
-  inline int get_num_edges();
+  // Test if there is an edge between two nodes.
+  // @param node1 The first node.
+  // @param node2 The second node.
+  // @return True if an edge exists, otherwise false.
+  inline bool isAdjacent(int node1, int node2);
 
-  // Test if there is an edge between two vertices.
-  inline bool is_adjacent(int v1, int v2);
+  // Get all nodes connected to the given node.
+  // @param node The node to check for any connections.
+  // @return The vector of connected nodes.
+  vector<int> getNeighbors(int node);
 
-  // List all connected vertices to the given vertex.
-  void neighbors(int v);
+  // Adds an edge between the two nodes.
+  // @param node1 The first node.
+  // @param node2 The second node.
+  // @param dist The edge distance (optional).
+  inline void addEdge(int node1, int node2, double dist = 0.0);
 
-  // Adds an edge between the two vertices, if it is not there.
-  inline void add_edge(int v1, int v2);
+  // Delete the edge between the two nodes.
+  // @param node1 The first node.
+  // @param node2 The second node.
+  inline void deleteEdge(int node1, int node2);
 
-  // Delete the edge between the two vertices, if it is there.
-  inline void delete_edge(int v1, int v2);
+  // Returns the value associated with the node.
+  // @param node The node whose value we want.
+  // @return The value at that node.
+  inline double getNodeValue(int node);
 
-  // Returns the value associated with the vertex.
-  inline double get_vertex_value(int v);
+  // Sets the value associated with the node.
+  // @param node The node whose value we want to set.
+  // @param value The value to set.
+  inline void setNodeValue(int node, double value);
 
-  // Sets the value associated with the vertex.
-  inline void set_vertex_value(int v, double value);
+  // Returns the value associated with the edge between the two nodes.
+  // @param node1 The first node.
+  // @param node2 The second node.
+  // @return The edge value.
+  inline double getEdgeValue(int node1, int node2);
 
-  // Returns the value associated with the edge between the two vertices.
-  inline double get_edge_value(int v1, int v2);
-
-  // Sets the value associated with the edge between the two vertices.
-  inline void set_edge_value(int v1, int v2, double value);
+  // Sets the edge value between the two nodes.
+  // @param node1 The first node.
+  // @param node2 The second node.
+  // @param dist The edge value to set.
+  inline void setEdgeValue(int node1, int node2, double value);
 
 private:
-  // The number of vertices in this undirected graph.
-  const int numVertices = 10;
+  // The number of nodes in this undirected graph.
+  int numNodes;
 
   // The number of edges in this undirected graph.
   int numEdges;
 
-  // The adjacency list representing this graph.
-  vector<pair<double, unordered_map<int, double>>> vertices;
+  // The adjacency list representing this undirected graph.
+  // Each vector element is a key-value pair, where the key represents the
+  // connected node, and the the value represents the edge distance.
+  vector<unordered_map<int, double>> nodeList;
+
+  // The value of each node in this undirected graph.
+  vector<double> nodeValues;
 
 };
 
