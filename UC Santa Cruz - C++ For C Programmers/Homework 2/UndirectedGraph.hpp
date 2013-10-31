@@ -27,17 +27,17 @@ public:
 
   // Returns the number of nodes in this graph.
   // @return The number of nodes in this graph.
-  inline int getNumNodes();
+  int getNumNodes();
 
   // Returns the number of edges in this graph.
   // @return The number of edges in this graph.
-  inline int getNumEdges();
+  int getNumEdges();
 
   // Test if there is an edge between two nodes.
   // @param node1 The first node.
   // @param node2 The second node.
   // @return True if an edge exists, otherwise false.
-  inline bool isAdjacent(int node1, int node2);
+  bool isAdjacent(int node1, int node2);
 
   // Get all nodes connected to the given node.
   // @param node The node to check for any connections.
@@ -48,34 +48,34 @@ public:
   // @param node1 The first node.
   // @param node2 The second node.
   // @param dist The edge distance (optional).
-  inline void addEdge(int node1, int node2, double dist = 0.0);
+  void addEdge(int node1, int node2, double dist = 0.0);
 
   // Delete the edge between the two nodes.
   // @param node1 The first node.
   // @param node2 The second node.
-  inline void deleteEdge(int node1, int node2);
+  void deleteEdge(int node1, int node2);
 
   // Returns the value associated with the node.
   // @param node The node whose value we want.
   // @return The value at that node.
-  inline double getNodeValue(int node);
+  double getNodeValue(int node);
 
   // Sets the value associated with the node.
   // @param node The node whose value we want to set.
   // @param value The value to set.
-  inline void setNodeValue(int node, double value);
+  void setNodeValue(int node, double value);
 
   // Returns the value associated with the edge between the two nodes.
   // @param node1 The first node.
   // @param node2 The second node.
   // @return The edge value.
-  inline double getEdgeValue(int node1, int node2);
+  double getEdgeValue(int node1, int node2);
 
   // Sets the edge value between the two nodes.
   // @param node1 The first node.
   // @param node2 The second node.
   // @param dist The edge value to set.
-  inline void setEdgeValue(int node1, int node2, double value);
+  void setEdgeValue(int node1, int node2, double value);
 
 private:
   // The number of nodes in this undirected graph.
@@ -93,6 +93,62 @@ private:
   vector<double> nodeValues;
 
 };
+
+// Inline function definitions placed here to avoid linker errors.
+
+inline int UndirectedGraph::getNumNodes()
+{
+  return numNodes;
+}
+
+inline int UndirectedGraph::getNumEdges()
+{
+  return numEdges;
+}
+
+inline bool UndirectedGraph::isAdjacent(int node1, int node2)
+{
+  // go to the index specified by node1 and search for the key specified by node2
+  return nodeList.at(node1).count(node2) > 0;
+}
+
+inline void UndirectedGraph::addEdge(int node1, int node2, double dist /*=0.0*/)
+{
+  setEdgeValue(node1, node2, dist);
+}
+
+inline void UndirectedGraph::deleteEdge(int node1, int node2)
+{
+  nodeList.at(node1).erase(node2);
+  nodeList.at(node2).erase(node1);
+
+  numEdges--; // update the number of edges
+}
+
+inline double UndirectedGraph::getNodeValue(int node)
+{
+  return nodeValues.at(node);
+}
+
+inline void UndirectedGraph::setNodeValue(int node, double value)
+{
+  nodeValues.at(node) = value;
+}
+
+inline double UndirectedGraph::getEdgeValue(int node1, int node2)
+{
+  return nodeList.at(node1).at(node2);
+}
+
+inline void UndirectedGraph::setEdgeValue(int node1, int node2, double value)
+{
+  // increment the number of edges if the nodes are not already connected
+  if (!isAdjacent(node1, node2))
+    numEdges++;
+
+  nodeList.at(node1)[node2] = value;
+  nodeList.at(node2)[node1] = value;
+}
 
 #endif // _HW2_UNDIRECTED_GRAPH_H_
 

@@ -20,40 +20,16 @@ UndirectedGraph::UndirectedGraph(int numNodes, double density, pair<double, doub
 
   // initialize uniform distributions for the graph density and edge distance calculations
   uniform_real_distribution<double> densityDistribution(0.0, 1.0);
-  uniform_real_distribution<double> edgeDistDistribution(1.0, 10.0);
+  uniform_real_distribution<double> edgeDistDistribution(distRange.first, distRange.second);
 
   // iterate all pairs of nodes, checking pairs only once and omitting nodes where i == j
   for (int i = 0; i < numNodes - 1; i++) {
     for (int j = i + 1; j < numNodes; j++) {
-      double densityValue = densityDistribution(generator);
-      cout << i << " " << j << " " << densityValue;
-      if (densityValue < density) {
-//      if (densityDistribution(generator) < density) { // probability calculation is less than the density
-//        addEdge(i, j, edgeDistDistribution(generator)); // add an edge between the nodes with a distance given by the distribution
-        numEdges++; // increment the number of edges
-        double edgeLength = edgeDistDistribution(generator);
-        addEdge(i, j, edgeLength);
-        cout << " edge length: " << edgeLength;
+      if (densityDistribution(generator) < density) { // probability calculation is less than the density
+        addEdge(i, j, edgeDistDistribution(generator)); // add an edge between the nodes with a distance given by the distribution
       }
-      cout << endl;
     }
   }
-}
-
-inline int UndirectedGraph::getNumNodes()
-{
-  return numNodes;
-}
-
-inline int UndirectedGraph::getNumEdges()
-{
-  return numEdges;
-}
-
-inline bool UndirectedGraph::isAdjacent(int node1, int node2)
-{
-  // go to the index specified by node1 and search for the key specified by node2
-  return nodeList.at(node1).count(node2) > 0;
 }
 
 vector<int> UndirectedGraph::getNeighbors(int node)
@@ -64,44 +40,5 @@ vector<int> UndirectedGraph::getNeighbors(int node)
     connectedNodes.push_back(it->first); // store the keys (the connected nodes)
 
   return connectedNodes;
-}
-
-inline void UndirectedGraph::addEdge(int node1, int node2, double dist /*=0.0*/)
-{
-  setEdgeValue(node1, node2, dist);
-}
-
-inline void UndirectedGraph::deleteEdge(int node1, int node2)
-{
-  nodeList.at(node1).erase(node2);
-  nodeList.at(node2).erase(node1);
-}
-
-inline double UndirectedGraph::getNodeValue(int node)
-{
-  return nodeValues.at(node);
-}
-
-inline void UndirectedGraph::setNodeValue(int node, double value)
-{
-  nodeValues.at(node) = value;
-}
-
-inline double UndirectedGraph::getEdgeValue(int node1, int node2)
-{
-  return nodeList.at(node1).at(node2);
-}
-
-inline void UndirectedGraph::setEdgeValue(int node1, int node2, double value)
-{
-  nodeList.at(node1)[node2] = value;
-  nodeList.at(node2)[node1] = value;
-}
-
-int main()
-{
-  UndirectedGraph g(5, 0.2, pair<double, double>(1.0, 10.0));
-
-  return 0;
 }
 
