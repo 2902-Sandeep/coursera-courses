@@ -1,6 +1,5 @@
 // Testing framework for the UndirectedGraph class.
 
-#include <cassert>
 #include <iostream>
 #include <algorithm>
 #include <utility>
