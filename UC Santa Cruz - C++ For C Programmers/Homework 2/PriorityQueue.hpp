@@ -12,7 +12,7 @@
 
 using namespace std;
 
-template <typename T>
+template <typename T1, typename T2>
 class PriorityQueue
 {
 public:
@@ -24,17 +24,17 @@ public:
 
   // Access the top element in this priority queue.
   // @return Returns the element with the highest priority without removing it from the queue.
-  inline T top()
+  inline T1 top()
   {
     return elements.front().first;
   }
 
   // Remove the top element in this priority queue.
   // @return Removes and returns the element with the highest priority from the queue.
-  T pop()
+  T1 pop()
   {
     pop_heap(elements.begin(), elements.end(), ComparePair());
-    T topElement = elements.back().first;
+    T1 topElement = elements.back().first;
     elements.pop_back();
     return topElement;
   }
@@ -42,9 +42,9 @@ public:
   // Insert an element into this priority queue.
   // @param element The element to insert into the queue.
   // @param priority The priority of the element.
-  void push(T element, int priority)
+  void push(T1 element, T2 priority)
   {
-    elements.push_back(pair<T, int>(element, priority));
+    elements.push_back(pair<T1, T2>(element, priority));
     push_heap(elements.begin(), elements.end(), ComparePair());
   }
 
@@ -55,10 +55,23 @@ public:
     return elements.size();
   }
 
+  // Tests if the priority queue is empty.
+  // @return True if the priority queue is empty, otherwise false.
+  inline bool empty()
+  {
+    return elements.empty();
+  }
+
+  // Clears the contents of the priority queue.
+  inline void clear()
+  {
+    elements.clear();
+  }
+
   // Checks for the first occurrence of a specific element in the the queue.
   // @param element The element whose existence in the queue is to be determined.
   // @return True if the element exists, false otherwise.
-  inline bool contains(T element)
+  inline bool contains(T1 element)
   {
     return find_if(elements.begin(), elements.end(), FindFirst(element)) != elements.end();
   }
@@ -66,9 +79,9 @@ public:
   // Changes the priority of the first occurrence of a specific element.
   // @param element The element whose priority we wish to change.
   // @param priority The new priority of the element.
-  void changePriority(T element, int priority)
+  void changePriority(T1 element, T2 priority)
   {
-    typename vector<std::pair<T, int> >::iterator it = find_if(elements.begin(), elements.end(), FindFirst(element));
+    typename vector<std::pair<T1, T2> >::iterator it = find_if(elements.begin(), elements.end(), FindFirst(element));
     if (it != elements.end()) {
       (*it).second = priority;
       make_heap(elements.begin(), elements.end(), ComparePair());
@@ -78,29 +91,29 @@ public:
 private:
   // The vector of elements in this queue; the first item in the pair is
   // the actual element of type T, while the second item is the priority.
-  vector<pair<T, int>> elements;
+  vector<pair<T1, T2>> elements;
 
   class ComparePair
   {
   public:
-    bool operator()(const pair<T, int> &lhs, const pair<T, int> &rhs)
+    bool operator()(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs)
     {
-      return lhs.second < rhs.second;
+      return lhs.second > rhs.second;
     }
   };
 
   class FindFirst
   {
   public:
-    FindFirst(T item) : item(item) {}
+    FindFirst(T1 item) : item(item) {}
 
-    bool operator()(const pair<T, int> &elem)
+    bool operator()(const pair<T1, T2> &elem)
     {
       return item == elem.first;
     }
 
   private:
-    T item;
+    T1 item;
   };
 
 };
