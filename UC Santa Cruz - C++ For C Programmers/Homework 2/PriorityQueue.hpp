@@ -77,16 +77,12 @@ private:
   // Comparison function where larger values have higher priority.
   static bool CompareDescending(const pair<T1, T2> &lhs, const pair<T1, T2> &rhs);
 
+  // Function object that is used to find the first matching element (compares the first item of the pair).
   class FindFirst
   {
   public:
-    FindFirst(T1 item) : item(item) {}
-
-    bool operator()(const pair<T1, T2> &elem)
-    {
-      return item == elem.first;
-    }
-
+    explicit FindFirst(T1 item) : item(item) {}
+    inline bool operator()(const pair<T1, T2> &elem) { return item == elem.first; }
   private:
     T1 item;
   };
