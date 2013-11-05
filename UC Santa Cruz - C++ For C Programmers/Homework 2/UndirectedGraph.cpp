@@ -32,13 +32,10 @@ UndirectedGraph::UndirectedGraph(int numNodes, double density, pair<double, doub
   }
 }
 
-vector<int> UndirectedGraph::getNeighbors(int node)
+void UndirectedGraph::getNeighbors(int node, vector<int> &neighbors)
 {
-  vector<int> connectedNodes; // initialize the vector of connected nodes
-
+  neighbors.clear();
   for (auto it = nodeList.at(node).begin(); it != nodeList.at(node).end(); ++it) // iterate the map
-    connectedNodes.push_back(it->first); // store the keys (the connected nodes)
-
-  return connectedNodes;
+    neighbors.push_back(it->first); // store the keys (the connected nodes)
 }
 

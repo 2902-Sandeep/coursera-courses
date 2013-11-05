@@ -41,8 +41,8 @@ public:
 
   // Get all nodes connected to the given node.
   // @param node The node to check for any connections.
-  // @return The vector of connected nodes.
-  vector<int> getNeighbors(int node);
+  // @param neighbors The reference vector of neighbors returned; any existing content will be cleared.
+  void getNeighbors(int node, vector<int> &neighbors);
 
   // Adds an edge between the two nodes.
   // @param node1 The first node.

@@ -68,8 +68,9 @@ bool ShortestPath::run(int startNode, int endNode)
     if (currNode == endNode) return true; // we are at the target node; terminate
 
     // acquire and iterate the neighboring nodes
-    neighbors.clear();
-    neighbors = currGraph->getNeighbors(currNode);
+    //neighbors.clear();
+    //neighbors = currGraph->getNeighbors(currNode);
+    currGraph->getNeighbors(currNode, neighbors);
     for (vector<int>::iterator it = neighbors.begin(); it != neighbors.end(); ++it) {
       // compute the shortest distance from the starting node
       distFromStart = currGraph->getNodeValue(currNode) + currGraph->getEdgeValue(currNode, *it);

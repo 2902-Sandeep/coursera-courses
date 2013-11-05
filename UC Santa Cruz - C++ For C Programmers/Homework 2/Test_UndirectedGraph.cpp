@@ -82,8 +82,9 @@ void UndirectedGraph_TestAdjacency()
   // Full graph.
   UndirectedGraph test1(100, 1.0, std::pair<double, double>(0.0, 0.0));
   ASSERT_CONDITION_SHOW_PASS(countEdges(test1) == 100 * (100 - 1) / 2, "Complete graph adjacency count check");
+  vector<int> neighbors;
   for (int i = 0; i < 100; i++) {
-    vector<int> neighbors = test1.getNeighbors(i);
+    test1.getNeighbors(i, neighbors);
     ASSERT_CONDITION(neighbors.size() == 99, "Neighbor count check");
     int j = 0;
     while (j < 100) {
@@ -101,7 +102,7 @@ void UndirectedGraph_TestAdjacency()
   for (int i = 25; i < 75; i++)
     test2.addEdge(0, i);
   ASSERT_CONDITION_SHOW_PASS(countEdges(test2) == 50, "Edges added: adjacency count check");
-  vector<int> neighbors = test2.getNeighbors(0);
+  test2.getNeighbors(0, neighbors);
   ASSERT_CONDITION_SHOW_PASS(neighbors.size() == 50, "Edges added: neighbor count check");
   for (int i = 25; i < 75; i++)
     ASSERT_CONDITION(find(neighbors.begin(), neighbors.end(), i) != neighbors.end(), "Edges added: neighbor correctness check");
@@ -122,7 +123,7 @@ void UndirectedGraph_TestAdjacency()
   for (int i = 35; i < 65; i++)
     test2.deleteEdge(0, i);
   ASSERT_CONDITION_SHOW_PASS(countEdges(test2) == 20, "Edges deleted: adjacency count check");
-  neighbors = test2.getNeighbors(0);
+  test2.getNeighbors(0, neighbors);
   ASSERT_CONDITION_SHOW_PASS(neighbors.size() == 20, "Edged deleted: neighbor count check");
   for (int i = 25; i < 35; i++)
     ASSERT_CONDITION(find(neighbors.begin(), neighbors.end(), i) != neighbors.end(), "Edges deleted: neighbor correctness check 1");
