@@ -7,7 +7,7 @@
 
 int main()
 {
-  PriorityQueue<int, int> pq;
+  PriorityQueue<int, int> pq(true);
 
   for (int i = 0, j = 9; i < 10; i++, j--) {
     pq.push(i, j);

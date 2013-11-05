@@ -7,6 +7,9 @@
 
 ShortestPath::ShortestPath(UndirectedGraph &graph, int startNode, int endNode)
 {
+  // we want the priority queue to always behave such that low values have higher priority
+  pQueue.setComparator(false);
+
   updateGraph(graph, startNode, endNode);
 }
 
@@ -68,8 +71,6 @@ bool ShortestPath::run(int startNode, int endNode)
     if (currNode == endNode) return true; // we are at the target node; terminate
 
     // acquire and iterate the neighboring nodes
-    //neighbors.clear();
-    //neighbors = currGraph->getNeighbors(currNode);
     currGraph->getNeighbors(currNode, neighbors);
     for (vector<int>::iterator it = neighbors.begin(); it != neighbors.end(); ++it) {
       // compute the shortest distance from the starting node
