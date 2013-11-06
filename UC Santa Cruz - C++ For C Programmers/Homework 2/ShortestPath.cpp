@@ -26,6 +26,8 @@ list<int> ShortestPath::path()
 {
   if (!exists()) // there is no path from the starting to the ending node
     return list<int>();
+  else if (currStartNode == currEndNode) // the starting and ending nodes are the same
+    return list<int>(2, currStartNode);
 
   list<int> path;
   int currNode = currEndNode;
@@ -33,7 +35,7 @@ list<int> ShortestPath::path()
   // reconstruct the shortest path from the ending node to the starting node
   path.push_front(currNode);
   while (previous[currNode] != -1) {
-    path.push_front(currNode);
+    path.push_front(previous[currNode]);
     currNode = previous[currNode]; // traverse backwards to the starting node
   }
 
