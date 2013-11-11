@@ -9,10 +9,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <unordered_set>
 #include <utility>
 #include <limits>
 #include <chrono>
 #include <random>
+
+#include "PriorityQueue.hpp"
 
 using namespace std;
 
@@ -80,6 +83,11 @@ public:
   // @param node2 The second node.
   // @param dist The edge value to set.
   void setEdgeValue(int node1, int node2, double value);
+
+  // Run Prim's Algorithm to find the Minimum Spanning Tree of this graph.
+  // @param edges The reference vector of edges (as pairs of node indices) returned; any existing content will be cleared.
+  // @param cost The reference vector of costs (associated with the edges) returned; any existing content will be cleared.
+  void runPrimAlgorithm(vector<pair<int, int>> &edges, vector<double> &cost);
 
 private:
   // The number of nodes in this undirected graph.

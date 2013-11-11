@@ -60,3 +60,44 @@ void UndirectedGraph::getNeighbors(int node, vector<int> &neighbors)
   }
 }
 
+void UndirectedGraph::runPrimAlgorithm(vector<pair<int, int>> &edges, vector<double> &cost)
+{
+  if (numNodes == 0) return; // account for empty graph
+
+  edges.clear();
+  cost.clear();
+
+  PriorityQueue<pair<int, int>, double> pq(false);
+  unordered_set<int> visitedNodes;
+  vector<int> neighbors;
+  double edgeValue;
+  pair<int, int> edge; // as a pair of nodes
+
+  visitedNodes.insert(0); // initialize the starting node
+  getNeighbors(0, neighbors);
+  for (auto it = neighbors.begin(); it != neighbors.end(); ++it) // initialize candidate edges
+    pq.push(pair<int, int>(0, *it), getEdgeValue(0, *it));
+
+  // repeat until we have visited all the nodes
+  while (visitedNodes.size() != numNodes) {
+    edgeValue = pq.getTopPriority();
+    edge = pq.pop();
+
+    // start again if we have already visited the destination node
+    if (visitedNodes.count(edge.second) > 0) continue;
+
+    visitedNodes.insert(edge.second); // mark the destination node as visited
+
+    // record the edge and its cost
+    cost.push_back(edgeValue);
+    edges.push_back(edge);
+
+    // add condidate edges, ignoring visited nodes
+    getNeighbors(edge.second, neighbors);
+    for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
+      if (visitedNodes.count(*it) == 0)
+        pq.push(pair<int, int>(edge.second, *it), getEdgeValue(edge.second, *it));
+    }
+  }
+}
+
