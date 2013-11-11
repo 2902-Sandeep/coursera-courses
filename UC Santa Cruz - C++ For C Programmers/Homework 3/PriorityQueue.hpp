@@ -1,10 +1,10 @@
 // UC Santa Cruz C++ For C Programmers
-// Homework 2: Implement Dijkstra's Algorithm
+// Homework 3: Compute the Minimum Spanning Tree for an Inputted Graph
 // TH Hee
 // PriorityQueue.hpp
 
-#ifndef _HW2_PRIORITY_QUEUE_H_
-#define _HW2_PRIORITY_QUEUE_H_
+#ifndef _HW3_PRIORITY_QUEUE_H_
+#define _HW3_PRIORITY_QUEUE_H_
 
 #include <vector>
 #include <algorithm>
@@ -185,5 +185,5 @@ inline T2 PriorityQueue<T1, T2>::getTopPriority()
   return elements.front().second; // return the element's priority at the top of the heap
 }
 
-#endif // _HW2_PRIORITY_QUEUE_H_
+#endif // _HW3_PRIORITY_QUEUE_H_
 

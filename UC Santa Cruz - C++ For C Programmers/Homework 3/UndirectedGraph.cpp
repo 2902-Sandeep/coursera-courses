@@ -45,10 +45,11 @@ UndirectedGraph::UndirectedGraph(const char* filename)
 
   nodeValues.resize(numNodes, numeric_limits<double>::max());
 
-  // read integer triples and process each set
-  int node1, node2, cost;
+  // read the two integer nodes and the cost as a double; process each set
+  int node1, node2;
+  double cost;
   while (infile >> node1 >> node2 >> cost)
-    addEdge(node1, node2, static_cast<double>(cost));
+    addEdge(node1, node2, cost);
 }
 
 void UndirectedGraph::getNeighbors(int node, vector<int> &neighbors)
@@ -97,6 +98,39 @@ void UndirectedGraph::runPrimAlgorithm(vector<pair<int, int>> &edges, vector<dou
     for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
       if (visitedNodes.count(*it) == 0)
         pq.push(pair<int, int>(edge.second, *it), getEdgeValue(edge.second, *it));
+    }
+  }
+}
+
+void UndirectedGraph::runKruskalAlgorithm(vector<pair<int, int>> &edges, vector<double> &cost)
+{
+  if (numNodes == 0) return; // account for empty graph
+
+  edges.clear();
+  cost.clear();
+
+  DisjointSet ds(numNodes);
+  PriorityQueue<pair<int, int>, double> pq(false);
+  double edgeValue;
+  pair<int, int> edge; // as a pair of nodes
+
+  for (int i = 0; i < numNodes - 1; ++i) {
+    for (int j = i + 1; j < numNodes; ++j) {
+      if (isAdjacent(i, j))
+        pq.push(pair<int, int>(i, j), getEdgeValue(i, j));
+    }
+  }
+
+  while (!pq.empty()) {
+    edgeValue = pq.getTopPriority();
+    edge = pq.pop();
+
+    if (!ds.isConnected(edge.first, edge.second)) {
+      // record the edge and its cost
+      cost.push_back(edgeValue);
+      edges.push_back(edge);
+
+      ds.merge(edge.first, edge.second); // connect the two sets
     }
   }
 }

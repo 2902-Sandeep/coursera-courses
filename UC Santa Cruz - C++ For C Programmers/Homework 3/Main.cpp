@@ -2,7 +2,7 @@
 // Homework 3: Compute the Minimum Spanning Tree for an Inputted Graph
 // TH Hee
 // Main.cpp
-// Runs Prim's or Kruskal's algorithm on a graph specified from an input file.
+// Runs Prim's and Kruskal's algorithm on a graph specified from an input file.
 
 #include <iostream>
 #include <numeric>
@@ -11,15 +11,26 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
-  UndirectedGraph graph("SampleTestData.txt");
+  if (argc != 2) {
+    cerr << "Usage: " << argv[0] << " <filename>" << endl;
+    return 1;
+  }
+
+  UndirectedGraph graph(argv[1]);
   vector<pair<int, int>> edges;
   vector<double> cost;
 
   graph.runPrimAlgorithm(edges, cost);
+  cout << "Prim's algorithm's total cost: " << accumulate(cost.begin(), cost.end(), 0.0) << endl;
+  for (int i = 0; i < edges.size(); ++i)
+    cout << edges[i].first << " -> " << edges[i].second << " (" << cost[i] << ")" << endl;
 
-  cout << "Total cost: " << accumulate(cost.begin(), cost.end(), 0.0) << endl;
+  cout << endl;
+
+  graph.runKruskalAlgorithm(edges, cost);
+  cout << "Kruskal's algorithm's total cost: " << accumulate(cost.begin(), cost.end(), 0.0) << endl;
   for (int i = 0; i < edges.size(); ++i)
     cout << edges[i].first << " -> " << edges[i].second << " (" << cost[i] << ")" << endl;
 

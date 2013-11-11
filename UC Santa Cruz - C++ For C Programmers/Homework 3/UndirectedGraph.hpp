@@ -16,6 +16,7 @@
 #include <random>
 
 #include "PriorityQueue.hpp"
+#include "DisjointSet.hpp"
 
 using namespace std;
 
@@ -88,6 +89,11 @@ public:
   // @param edges The reference vector of edges (as pairs of node indices) returned; any existing content will be cleared.
   // @param cost The reference vector of costs (associated with the edges) returned; any existing content will be cleared.
   void runPrimAlgorithm(vector<pair<int, int>> &edges, vector<double> &cost);
+
+  // Run Kruskal's Algorithm to find the Minimum Spanning Tree of this graph.
+  // @param edges The reference vector of edges (as pairs of node indices) returned; any existing content will be cleared.
+  // @param cost The reference vector of costs (associated with the edges) returned; any existing content will be cleared.
+  void runKruskalAlgorithm(vector<pair<int, int>> &edges, vector<double> &cost);
 
 private:
   // The number of nodes in this undirected graph.
