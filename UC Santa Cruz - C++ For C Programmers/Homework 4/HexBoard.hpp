@@ -16,7 +16,7 @@
 using namespace std;
 
 // Only 3 possible states for each cell on the hex board.
-enum class HexBoardState : char { NONE, X, O };
+enum class HexBoardState : char { X, O, NONE };
 
 class HexBoard
 {
@@ -38,20 +38,21 @@ public:
   // The cell index starts from 0 at the top left and runs to n at the bottom right.
   // @param state The state to set.
   // @param index A valid cell index on the board returned by the check method.
-  void set(HexBoardState state, int index);
+  void set(const HexBoardState state, const int index);
 
   // Gets the state of the specified cell index on the hex board.
   // The cell index starts from 0 at the top left and runs to n at the bottom right.
   // @param index A valid cell index on the board returned by the check method.
   // @return The state of the specified cell index on the hex board.
-  HexBoardState get(int index);
+  HexBoardState get(const int index);
 
   // Draw the formatted hex board onto the console screen.
   void draw();
 
 private:
   // The game board, represented by an undirected graph.
-  UndirectedGraph board;
+  // The nodes have enum states, and the edges are integer values.
+  UndirectedGraph<HexBoardState, int> board;
 
   // The size of the board.
   int size;
@@ -65,6 +66,18 @@ private:
   regex pattern2;
 
 };
+
+// Inline function definitions placed here to avoid linker errors.
+
+inline void HexBoard::set(const HexBoardState state, const int index)
+{
+  board.setNodeValue(index, state);
+}
+
+inline HexBoardState HexBoard::get(const int index)
+{
+  return board.getNodeValue(index);
+}
 
 #endif // _HW4_HEX_BOARD_H_
 

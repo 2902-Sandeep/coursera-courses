@@ -13,31 +13,30 @@ HexBoard::HexBoard(const int size)
   else this->size = size;
 
   // assign the appropriate regular expressions
-  pattern1.assign("^([a-zA-Z])([0-9]+)$");
-  pattern2.assign("^([0-9]+)([a-zA-Z])$");
+  pattern1.assign("^([a-zA-Z])([0-9]+)$"); // start with letter, end with number
+  pattern2.assign("^([0-9]+)([a-zA-Z])$"); // start with number, end with letter
 
   // set up the nodes
   int numNodes = this->size * this->size;
+  board.init(HexBoardState::NONE, 0);
   board.addNodes(numNodes);
 
   // set up the edges
   for (int i = 0; i < numNodes; ++i) {
     if (i % this->size != this->size - 1) // horizontal connections
-      board.addEdge(i, i + 1, 1.0);
+      board.addEdge(i, i + 1, 1);
     if (i < this->size * (this->size - 1)) { // right-slanted connections
-      board.addEdge(i, i + this->size, 1.0);
+      board.addEdge(i, i + this->size, 1);
       if (i % this->size != 0) // left-slanted connections
-        board.addEdge(i, i + this->size - 1, 1.0);
+        board.addEdge(i, i + this->size - 1, 1);
     }
   }
-
-  reset();
 }
 
 void HexBoard::reset()
 {
   for (int i = 0; i < board.getNumNodes(); ++i)
-    board.setNodeValue(i, 0.0);
+    board.setNodeValue(i, HexBoardState::NONE);
 }
 
 int HexBoard::check(const string &position)
@@ -65,18 +64,45 @@ int HexBoard::check(const string &position)
   return xIndex + yIndex * size;
 }
 
-void HexBoard::set(HexBoardState state, int index)
-{
-
-}
-
-HexBoardState HexBoard::get(int index)
-{
-  return HexBoardState::NONE;
-}
-
 void HexBoard::draw()
 {
+  // display first row of letters
+  cout << "  ";
+  for (int i = 0; i < size; ++i) cout << " " << static_cast<char>(65 + i);
+  cout << endl;
 
+  // display main hex grid
+  for (int y = 0; y < size; ++y) {
+    // display variable initial spacing
+    cout << string(y, ' ');
+
+    // display number (left side)
+    if (y < 9) cout << " " << y + 1 << " ";
+    else cout << y + 1 << " ";
+
+    // display grid row
+    for (int x = 0; x < size; ++x) {
+      switch (board.getNodeValue(x + y * size)) {
+      case HexBoardState::X:
+        cout << " x";
+        break;
+      case HexBoardState::O:
+        cout << " o";
+        break;
+      case HexBoardState::NONE:
+      default:
+        cout << " .";
+        break;
+      }
+    }
+
+    // display number (right side)
+    cout << "  " << y + 1 << endl;
+  }
+
+  // display last row of letters
+  cout << "   " << string(size, ' ');
+  for (int i = 0; i < size; ++i) cout << " " << static_cast<char>(65 + i);
+  cout << endl;
 }
 
