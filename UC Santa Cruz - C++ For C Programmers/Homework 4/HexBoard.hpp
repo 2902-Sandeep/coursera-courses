@@ -21,9 +21,16 @@ enum class HexBoardState : char { X, O, NONE };
 class HexBoard
 {
 public:
+  // Default constructor.
+  HexBoard();
+
   // Constructor. Generates a size x size hex board.
   // @param size The size of the hex board; ranging from 2 to 26.
   HexBoard(const int size);
+
+  // Used to initialize a size x size hex board if the default constructor was used.
+  // @param size The size of the hex board; ranging from 2 to 26.
+  void init(const int size);
 
   // Resets the hex board such that there are no pieces in play;
   // i.e. make all states on the board NONE.
@@ -64,6 +71,9 @@ private:
   // The regular expression that checks for the pattern where
   // the number comes first, e.g. 8A, 14b, 1c, etc.
   regex pattern2;
+
+  // Internal function used to initialize the regular expressions.
+  void initRegex();
 
 };
 

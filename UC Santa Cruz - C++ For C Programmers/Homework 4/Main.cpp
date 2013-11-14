@@ -4,10 +4,17 @@
 // Main.cpp
 // Hex game implementation.
 
-#include <iostream>
+#include "HexGame.hpp"
+
+using namespace std;
 
 int main()
 {
+  HexGame game;
+
+  if (game.init())
+    game.start();
+
   return 0;
 }
 

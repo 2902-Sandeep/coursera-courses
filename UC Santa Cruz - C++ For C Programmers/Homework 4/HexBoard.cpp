@@ -5,16 +5,23 @@
 
 #include "HexBoard.hpp"
 
+HexBoard::HexBoard()
+{
+  initRegex();
+}
+
 HexBoard::HexBoard(const int size)
+{
+  initRegex();
+  init(size);
+}
+
+void HexBoard::init(const int size)
 {
   // limit the range of board sizes
   if (size < 2) this->size = 2;
   else if (size > 26) this->size = 26;
   else this->size = size;
-
-  // assign the appropriate regular expressions
-  pattern1.assign("^([a-zA-Z])([0-9]+)$"); // start with letter, end with number
-  pattern2.assign("^([0-9]+)([a-zA-Z])$"); // start with number, end with letter
 
   // set up the nodes
   int numNodes = this->size * this->size;
@@ -104,5 +111,12 @@ void HexBoard::draw()
   cout << "   " << string(size, ' ');
   for (int i = 0; i < size; ++i) cout << " " << static_cast<char>(65 + i);
   cout << endl;
+}
+
+void HexBoard::initRegex()
+{
+  // assign the appropriate regular expressions
+  pattern1.assign("^([a-zA-Z])([0-9]+)$"); // start with letter, end with number
+  pattern2.assign("^([0-9]+)([a-zA-Z])$"); // start with number, end with letter
 }
 
