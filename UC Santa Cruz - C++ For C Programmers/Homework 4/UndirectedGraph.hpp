@@ -224,8 +224,11 @@ inline T2 UndirectedGraph<T1, T2>::getEdgeValue(const int node1, const int node2
 template <typename T1, typename T2>
 inline void UndirectedGraph<T1, T2>::setEdgeValue(const int node1, const int node2, const T2 value)
 {
-  // increment the number of edges if the nodes are not already connected
-  if (!isAdjacent(node1, node2)) numEdges++;
+  if (!isAdjacent(node1, node2)) {
+    numEdges++;
+    adjacencyMatrix[node1][node2].first = true;
+    adjacencyMatrix[node2][node1].first = true;
+  }
 
   adjacencyMatrix[node1][node2].second = value;
   adjacencyMatrix[node2][node1].second = value;
