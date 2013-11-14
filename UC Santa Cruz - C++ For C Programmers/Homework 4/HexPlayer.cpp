@@ -20,15 +20,16 @@ void HexPlayer::use(const HexBoardPiece piece)
   this->piece = piece == HexBoardPiece::X ? HexBoardState::X : HexBoardState::O;
 }
 
-bool HexPlayer::move(HexBoard &board, const string &position)
+HexMoveResult HexPlayer::move(HexBoard &board, const string &position)
 {
   int boardIndex = board.check(position);
 
-  // invalid position, or position already occupied
-  if ((boardIndex == -1) || (board.get(boardIndex) != HexBoardState::NONE))
-    return false;
+  if (boardIndex == -1) // invalid position
+    return HexMoveResult::OUTOFBOUNDS;
+  else if (board.get(boardIndex) != HexBoardState::NONE) // position already occupied
+    return HexMoveResult::OCCUPIED;
 
   board.set(piece, boardIndex);
-  return true;
+  return HexMoveResult::VALID;
 }
 

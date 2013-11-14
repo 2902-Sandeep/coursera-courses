@@ -18,8 +18,8 @@ bool HexGame::init()
   cout << "Hello there! Let's play a game of Hex..." << endl;
 
   printBreak();
-  cout << "How large do you want the board?" << endl;
-  cout << "Please enter the number of hexes on one side (between 2 to 26): ";
+  cout << "How large do you want the board?" << endl
+       << "Please enter the number of hexes on one side (between 2 to 26): ";
   getline(cin, inputString);
   int size;
   stringstream(inputString) >> size;
@@ -35,15 +35,15 @@ bool HexGame::init()
   player2.use(HexBoardPiece::O);
 
   printBreak();
-  cout << "Here's a legend for your reference." << endl;
-  cout << "I'm still too dumb, so for now I'll let you Humans play..." << endl << endl;
-  cout << "********************************************************************************" << endl;
-  cout << "* STATE          * SYMBOL * NOTES                                              *" << endl;
-  cout << "********************************************************************************" << endl;
-  cout << "* Empty Location *   .    * self-explanatory                                   *" << endl;
-  cout << "* Player 1 Piece *   x    * connects the left to the right side, moves 1st     *" << endl;
-  cout << "* Player 2 Piece *   o    * connects the top to the bottom of the board        *" << endl;
-  cout << "********************************************************************************" << endl;
+  cout << "Here's a legend for your reference." << endl
+       << "I'm still too dumb, so for now I'll let you humans play..." << endl << endl
+       << "********************************************************************************" << endl
+       << "* STATE          * SYMBOL * NOTES                                              *" << endl
+       << "********************************************************************************" << endl
+       << "* Empty Location *   .    * self-explanatory                                   *" << endl
+       << "* Player 1 Piece *   x    * connects the left to the right side, moves 1st     *" << endl
+       << "* Player 2 Piece *   o    * connects the top to the bottom of the board        *" << endl
+       << "********************************************************************************" << endl;
 
   printBreak();
   cout << "Are you ready? (Y to start, N to quit): ";
@@ -64,11 +64,74 @@ bool HexGame::init()
 
 void HexGame::start()
 {
+  cout << "BOARD (no moves)" << endl << endl;
+  board.draw();
+  cout << endl;
+  printBreak();
 
+  int turnNum = 0;
+  int currIdx = 1;
+  bool isFinished = false;
+
+  while (!isFinished) {
+    turnNum++;
+    currIdx = (currIdx + 1) % 2;
+    move(currIdx, turnNum);
+    isFinished = checkWin(currIdx);
+  }
+
+  cout << "Congratulations Player " << currIdx + 1 << "! You've won this match!" << endl
+       << "Sorry Player " << ((currIdx + 1) % 2) + 1 << ". Try again next time..." << endl
+       << "GAME OVER." << endl;
 }
 
 void HexGame::printBreak()
 {
   cout << "--------------------------------------------------------------------------------" << endl;
+}
+
+void HexGame::move(const int playerIdx, const int turnNum)
+{
+  bool isValidMove = false;
+  string inputLocation;
+  HexPlayer *player;
+
+  cout << "Move " << turnNum;
+  if (playerIdx == 0) {
+    player = &player1;
+    cout << ": Player 1 (x)" << endl;
+  }
+  else {
+    player = &player2;
+    cout << ": Player 2 (o)" << endl;
+  }
+
+  while (!isValidMove) {
+    cout << "Please enter a location: ";
+    getline(cin, inputLocation);
+    switch (player->move(board, inputLocation)) {
+    case HexMoveResult::VALID:
+      isValidMove = true;
+      break;
+    case HexMoveResult::OCCUPIED:
+      cout << "Whoops! That location is already occupied, try again." << endl;
+      break;
+    case HexMoveResult::OUTOFBOUNDS:
+    default:
+      cout << "Whoops! You've entered an invalid location, try again." << endl;
+      break;
+    }
+  }
+
+  printBreak();
+  cout << "BOARD (after Move " << turnNum << ")" << endl << endl;
+  board.draw();
+  cout << endl;
+  printBreak();
+}
+
+bool HexGame::checkWin(const int playerIdx)
+{
+  return false;
 }
 

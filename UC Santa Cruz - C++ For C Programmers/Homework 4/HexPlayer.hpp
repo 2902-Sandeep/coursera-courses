@@ -13,6 +13,9 @@ using namespace std;
 // Only 2 possible piece types.
 enum class HexBoardPiece : char { X, O };
 
+// Only 3 possible move results.
+enum class HexMoveResult : char { VALID, OUTOFBOUNDS, OCCUPIED };
+
 class HexPlayer
 {
 public:
@@ -30,8 +33,8 @@ public:
   // Make a move on the board.
   // @param board A reference to the board being played on.
   // @param position The alphanumeric position on the board to play the piece.
-  // @return True if the move is valid, otherwise false and the board is unchanged.
-  bool move(HexBoard &board, const string &position);
+  // @return One of the 3 possible move results.
+  HexMoveResult move(HexBoard &board, const string &position);
 
 private:
   // The piece that this player uses.
