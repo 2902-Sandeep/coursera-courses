@@ -6,12 +6,12 @@
 #ifndef _HW4_HEX_PLAYER_H_
 #define _HW4_HEX_PLAYER_H_
 
+#include <vector>
+
 #include "HexBoard.hpp"
+#include "DisjointSet.hpp"
 
 using namespace std;
-
-// Only 2 possible piece types.
-enum class HexBoardPiece : char { X, O };
 
 // Only 3 possible move results.
 enum class HexMoveResult : char { VALID, OUTOFBOUNDS, OCCUPIED };
@@ -36,9 +36,20 @@ public:
   // @return One of the 3 possible move results.
   HexMoveResult move(HexBoard &board, const string &position);
 
+  bool checkWin(HexBoard &board);
+
 private:
   // The piece that this player uses.
-  HexBoardState piece;
+  HexBoardPiece piece;
+
+  // Keeps a record of the positions that this player has played.
+  DisjointSet<int> moves;
+
+  // Tracks the nodes on one side of the board that the player has pieces at.
+  vector<int> begPos;
+
+  // Tracks the nodes on the other side of the board that the player has pieces at.
+  vector<int> endPos;
 
 };
 

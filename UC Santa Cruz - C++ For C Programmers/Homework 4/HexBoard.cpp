@@ -25,7 +25,7 @@ void HexBoard::init(const int size)
 
   // set up the nodes
   int numNodes = this->size * this->size;
-  board.init(HexBoardState::NONE, 0);
+  board.init(HexBoardPiece::NONE, 0);
   board.addNodes(numNodes);
 
   // set up the edges
@@ -43,7 +43,7 @@ void HexBoard::init(const int size)
 void HexBoard::reset()
 {
   for (int i = 0; i < board.getNumNodes(); ++i)
-    board.setNodeValue(i, HexBoardState::NONE);
+    board.setNodeValue(i, HexBoardPiece::NONE);
 }
 
 int HexBoard::check(const string &position)
@@ -90,13 +90,13 @@ void HexBoard::draw()
     // display grid row
     for (int x = 0; x < size; ++x) {
       switch (board.getNodeValue(x + y * size)) {
-      case HexBoardState::X:
+      case HexBoardPiece::X:
         cout << " x";
         break;
-      case HexBoardState::O:
+      case HexBoardPiece::O:
         cout << " o";
         break;
-      case HexBoardState::NONE:
+      case HexBoardPiece::NONE:
       default:
         cout << " .";
         break;

@@ -83,6 +83,7 @@ void HexGame::start()
   cout << "Congratulations Player " << currIdx + 1 << "! You've won this match!" << endl
        << "Sorry Player " << ((currIdx + 1) % 2) + 1 << ". Try again next time..." << endl
        << "GAME OVER." << endl;
+  printBreak();
 }
 
 void HexGame::printBreak()
@@ -132,6 +133,9 @@ void HexGame::move(const int playerIdx, const int turnNum)
 
 bool HexGame::checkWin(const int playerIdx)
 {
-  return false;
+  if (playerIdx == 0)
+    return player1.checkWin(board);
+  else
+    return player2.checkWin(board);
 }
 

@@ -7,6 +7,7 @@
 #define _HW4_HEX_BOARD_H_
 
 #include <iostream>
+#include <vector>
 #include <string>
 #include <regex>
 #include <cctype>
@@ -16,7 +17,7 @@
 using namespace std;
 
 // Only 3 possible states for each cell on the hex board.
-enum class HexBoardState : char { X, O, NONE };
+enum class HexBoardPiece : char { X, O, NONE };
 
 class HexBoard
 {
@@ -36,6 +37,10 @@ public:
   // i.e. make all states on the board NONE.
   void reset();
 
+  // Gets the number of hexes on one side of the board.
+  // @return The size of the board.
+  int getSize();
+
   // Checks if the given cell position is valid on this hex board.
   // @param position The alphanumeric cell location to check.
   // @return The index of the cell position; -1 if invalid.
@@ -43,23 +48,29 @@ public:
 
   // Sets the given state at the specified cell index on the hex board.
   // The cell index starts from 0 at the top left and runs to n at the bottom right.
-  // @param state The state to set.
+  // @param piece The state to set.
   // @param index A valid cell index on the board returned by the check method.
-  void set(const HexBoardState state, const int index);
+  void set(const HexBoardPiece piece, const int index);
 
   // Gets the state of the specified cell index on the hex board.
   // The cell index starts from 0 at the top left and runs to n at the bottom right.
   // @param index A valid cell index on the board returned by the check method.
   // @return The state of the specified cell index on the hex board.
-  HexBoardState get(const int index);
+  HexBoardPiece get(const int index);
 
   // Draw the formatted hex board onto the console screen.
   void draw();
 
+  // Gets the indices of the neighbors of the specified cell index.
+  // The cell index starts from 0 at the top left and runs to n at the bottom right.
+  // @param index A valid cell index on the board returned by the check method.
+  // @param neighbors The reference vector of neighbors returned; any existing content will be cleared.
+  void getNeighbors(const int index, vector<int> &neighbors);
+
 private:
   // The game board, represented by an undirected graph.
   // The nodes have enum states, and the edges are integer values.
-  UndirectedGraph<HexBoardState, int> board;
+  UndirectedGraph<HexBoardPiece, int> board;
 
   // The size of the board.
   int size;
@@ -79,14 +90,24 @@ private:
 
 // Inline function definitions placed here to avoid linker errors.
 
-inline void HexBoard::set(const HexBoardState state, const int index)
+inline int HexBoard::getSize()
+{
+  return size;
+}
+
+inline void HexBoard::set(const HexBoardPiece state, const int index)
 {
   board.setNodeValue(index, state);
 }
 
-inline HexBoardState HexBoard::get(const int index)
+inline HexBoardPiece HexBoard::get(const int index)
 {
   return board.getNodeValue(index);
+}
+
+inline void HexBoard::getNeighbors(const int index, vector<int> &neighbors)
+{
+  board.getNeighbors(index, neighbors);
 }
 
 #endif // _HW4_HEX_BOARD_H_
