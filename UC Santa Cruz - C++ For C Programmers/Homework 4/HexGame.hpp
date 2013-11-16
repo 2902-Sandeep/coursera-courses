@@ -33,25 +33,20 @@ private:
   // The playing board.
   HexBoard board;
 
-  // The first human player.
-  HexPlayer player1;
+  // The first player (connects east-west).
+  HexPlayerEastWest player1;
 
-  // The second human player.
-  HexPlayer player2;
+  // The second player (connects north-south).
+  HexPlayerNorthSouth player2;
 
   // Internal function that outputs a separator to the console (80 dashes).
   void printBreak();
 
   // Internal function that handles and outputs a player's move each turn.
-  // @param playerIdx The index of the current player (player1 == 0, player2 == 1).
+  // @param player The current player.
   // @param turnNum The current move number.
-  void move(const int playerIdx, const int turnNum);
-
-  // Internal function that determines if the game is over by checking
-  // if the given player has achieved the winning condition.
-  // @param playerIdx The index of the current player to check.
-  // @return True if the given player has won, otherwise false.
-  bool checkWin(const int playerIdx);
+  // @return True if the player's move resulted in a win, otherwise false.
+  bool move(HexPlayer *player, const int turnNum);
 
 };
 

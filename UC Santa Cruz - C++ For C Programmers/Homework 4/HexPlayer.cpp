@@ -34,19 +34,7 @@ HexMoveResult HexPlayer::move(HexBoard &board, const string &position)
   board.set(piece, boardIndex);
 
   // record if this is an edge piece (a move at the edge of the board)
-  int boardSize = board.getSize();
-  if (piece == HexBoardPiece::X) { // first player (connects left/right)
-    if (boardIndex % boardSize == 0)
-      begPos.push_back(boardIndex); // keep track of the left nodes
-    else if (boardIndex % boardSize == boardSize - 1)
-      endPos.push_back(boardIndex); // keep track of the right nodes
-  }
-  else { // second player (connects top/bottom)
-    if (boardIndex < boardSize)
-      begPos.push_back(boardIndex); // keep track of the top nodes
-    else if (boardIndex >= boardSize * (boardSize - 1))
-      endPos.push_back(boardIndex); // keep track of the bottom nodes
-  }
+  updateBoardEdgePos(board.getSize(), boardIndex);
 
   // update the connected nodes
   vector<int> neighbors;
@@ -61,6 +49,7 @@ HexMoveResult HexPlayer::move(HexBoard &board, const string &position)
 
 bool HexPlayer::checkWin(HexBoard &board)
 {
+  // for each pair of starting-ending positions, check if they are connected
   for (auto itBeg = begPos.begin(); itBeg != begPos.end(); ++itBeg) {
     for (auto itEnd = endPos.begin(); itEnd != endPos.end(); ++itEnd) {
       if (moves.isConnected(*itBeg, *itEnd))
@@ -69,5 +58,33 @@ bool HexPlayer::checkWin(HexBoard &board)
   }
 
   return false;
+}
+
+
+void HexPlayerEastWest::displayName()
+{
+  cout << "Player 1 (x)";
+}
+
+void HexPlayerEastWest::updateBoardEdgePos(const int boardSize, const int boardIndex)
+{
+  if (boardIndex % boardSize == 0)
+    begPos.push_back(boardIndex); // keep track of the left nodes
+  else if (boardIndex % boardSize == boardSize - 1)
+    endPos.push_back(boardIndex); // keep track of the right nodes
+}
+
+
+void HexPlayerNorthSouth::displayName()
+{
+  cout << "Player 2 (o)";
+}
+
+void HexPlayerNorthSouth::updateBoardEdgePos(const int boardSize, const int boardIndex)
+{
+  if (boardIndex < boardSize)
+    begPos.push_back(boardIndex); // keep track of the top nodes
+  else if (boardIndex >= boardSize * (boardSize - 1))
+    endPos.push_back(boardIndex); // keep track of the bottom nodes
 }
 
