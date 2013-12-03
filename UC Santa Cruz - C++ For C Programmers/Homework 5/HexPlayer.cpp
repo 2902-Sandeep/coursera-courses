@@ -43,8 +43,8 @@ HexMoveResult HexPlayer::updateMove(HexBoard &board, const int boardIndex)
     return HexMoveResult::OCCUPIED;
 
   // record this move
-  moves.add(boardIndex);
   board.set(piece, boardIndex);
+  moves.add(boardIndex);
 
   // record if this is an edge piece (a move at the edge of the board)
   updateBoardEdgePos(board.getSize(), boardIndex);
@@ -101,7 +101,7 @@ HexPlayerHuman::~HexPlayerHuman()
 
 }
 
-bool HexPlayerHuman::makeMove(HexBoard &board, const int turnNum)
+bool HexPlayerHuman::makeMove(HexBoard &board)
 {
   displayName(); cout << endl; // player selection
 
@@ -142,136 +142,91 @@ HexPlayerAI::~HexPlayerAI()
 
 }
 
-bool HexPlayerAI::makeMove(HexBoard &board, const int turnNum)
+bool HexPlayerAI::makeMove(HexBoard &board)
 {
   displayName(); cout << endl; // player selection
 
-  bool isValidMove = false;
-  unsigned seed = chrono::system_clock::now().time_since_epoch().count(); // seed value based on current time
-  default_random_engine generator(seed); // seed the random number engine
-  uniform_int_distribution<int> distribution(0, board.getNumCells() - 1); // initialize uniform distribution
+//  bool isValidMove = false;
+//  unsigned seed = chrono::system_clock::now().time_since_epoch().count(); // seed value based on current time
+//  default_random_engine generator(seed); // seed the random number engine
+//  uniform_int_distribution<int> distribution(0, board.getNumCells() - 1); // initialize uniform distribution
 
-/*
-  HexBoard tempBoard = board;
-  vector<int> tempIndices = freeBoardIndices;
-  int numWins = 0, curWins = 0;
-  auto selectedIt = freeBoardIndices.begin();
-  for (auto it = freeBoardIndices.begin(); it != freeBoardIndices.end(); ++it) {
-    curWins = evaluatePosition(player, board, tempIndices, *it);
+  vector<int> openIndices;
+  board.getUnoccupiedCellIndices(openIndices);
+
+  int numWins = 0, curWins = 0, selectedIndex = 0;
+  for (auto &idx : openIndices) {
+    curWins = evaluatePosition(idx, board, openIndices);
     if (numWins < curWins) {
       numWins = curWins;
-      selectedIt = it;
+      selectedIndex = idx;
     }
   }
 
   // make the selected move
-  player->move(*board, *selectedIt);
-*/
+  move(board, selectedIndex);
 
   // check to see if it was a winning move
   return checkWin();
 }
 
-int HexGame::evaluatePosition(HexPlayer *player, HexBoard &tempBoard, vector<int> &tempIndices, const int boardIndex)
+int HexPlayerAI::evaluatePosition(const int curIdx, HexBoard &board, vector<int> &openIndices)
 {
   // remove the index currently being evaluated
-  auto it = find(tempIndices.begin(), tempIndices.end(), boardIndex);
-  tempIndices.erase(it);
+  vector<int> tempIndices = openIndices;
+  tempIndices.erase(find(tempIndices.begin(), tempIndices.end(), curIdx));
 
   // determine the pieces being used
-//  HexBoardPiece opponentPiece = player->getPiece() == HexBoardPiece::X ? HexBoardPiece::O : HexBoardPiece::X;
-//  tempBoard.set(player->getPiece(), boardIndex); // fix the piece currently being evaluated
+  HexBoardPiece opponentPiece = piece == HexBoardPiece::X ? HexBoardPiece::O : HexBoardPiece::X;
+  board.set(piece, curIdx); // fix the piece currently being evaluated
 
-  int numWins = 0;
-  int iter = 0;
+  // get the indices of all cells currently occupied by the player
+  vector<int> playerIndices;
+  piece == HexBoardPiece::X ? board.getXCellIndices(playerIndices) : board.getOCellIndices(playerIndices);
+
+  int numWins = 0, iter = 0;
   while (iter++ < 1000) {
-    /*
-    DisjointSet<int> moves;
-    vector<int> begPos, endPos;
-    updateDisjointSet(moves, begPos, endPos);
-    */
+    //DisjointSet<int> playerMoves;
+    //HexBoard tempBoard = board;
+    //for (int &i : playerIndices)
+    //  updateDisjointSet(playerMoves, i, tempBoard);
+
     // shuffle the indices; this will be the random order of moves
     unsigned seed = chrono::system_clock::now().time_since_epoch().count(); // seed value based on current time
     shuffle(tempIndices.begin(), tempIndices.end(), default_random_engine(seed));
 
-//    int i = 0;
-//    for (it = tempIndices.begin(); it != tempIndices.end(); ++it, ++i) {
-    /*
+    for (int i = 0; i < tempIndices.size(); ++i) {
       if (i % 2 == 0)
-        tempBoard.set(opponentPiece, *it);
+        board.set(opponentPiece, tempIndices[i]);
+        //tempBoard.set(opponentPiece, tempIndices[i]);
       else {
-        cout << "moving.." << endl;
-        updateDisjointSet(moves, tempBoard, *it, );
-        tempBoard.set(player->getPiece(), *it);
+        board.set(piece, tempIndices[i]);
+        //tempBoard.set(piece, tempIndices[i]);
+        //updateDisjointSet(playerMoves, tempIndices[i], tempBoard);
       }
-      */
-//      i % 2 == 0 ? tempBoard.set(opponentPiece, *it) : tempBoard.set(player->getPiece(), *it);
-//    }
+    }
 
     if (true) ++numWins;
     //if (tempPlayer->checkWin(tempBoard)) ++numWins;
   }
 
-  // restore vector of open positions
-  tempIndices.push_back(boardIndex);
-
   // restore board
-  for (it = tempIndices.begin(); it != tempIndices.end(); ++it)
-    tempBoard.set(HexBoardPiece::NONE, *it);
+  //board.set(HexBoardPiece::NONE, curIdx);
+  for (int &idx : openIndices)
+    board.set(HexBoardPiece::NONE, idx);
 
   return numWins;
 }
-/*
-void HexGame::updateDisjointSet(DisjointSet<int> &moves, vector<int> &begPos, vector<int> &endPos)
-{
-  for (auto it = AIBoardIndices.begin(); it != AIBoardIndices.end(); ++it) {
-    moves.add(*it);
-    if (isAIMoveFirst) {
-      if (*it % board.getSize() == 0)
-        begPos.push_back(*it);
-      else if (*it % board.getSize() == board.getSize() - 1)
-        endPos.push_back(*it);
-    }
-    else {
-      if (*it < board.getSize())
-        begPos.push_back(*it);
-      else if (*it >= board.getSize() * (board.getSize() - 1))
-        endPos.push_back(*it);
-    }
 
-    vector<int> neighbors;
-    board.getNeighbors(*it, neighbors);
-    for (auto it2 = neighbors.begin(); it != neighbors.end(); ++it) {
-      if (board.get(*it2) == (isAIMoveFirst ? HexBoardPiece::X : HexBoardPiece::O))
-        moves.merge(*it2, *it);
-    }
+void HexPlayerAI::updateDisjointSet(DisjointSet<int> &playerMoves, const int boardIndex, HexBoard &board)
+{
+  playerMoves.add(boardIndex);
+
+  vector<int> neighbors;
+  board.getNeighbors(boardIndex, neighbors);
+  for (auto &i : neighbors) {
+    if (board.get(i) == piece) // the neighboring piece belongs to this player
+      playerMoves.merge(i, boardIndex); // merge the connected components
   }
 }
-
-void HexGame::updateDisjointSet(DisjointSet<int> &moves, HexBoard &tempBoard, vector<int> &begPos, vector<int> &endPos)
-{
-  for (auto it = AIBoardIndices.begin(); it != AIBoardIndices.end(); ++it) {
-    moves.add(*it);
-    if (isAIMoveFirst) {
-      if (*it % board.getSize() == 0)
-        begPos.push_back(*it);
-      else if (*it % board.getSize() == board.getSize() - 1)
-        endPos.push_back(*it);
-    }
-    else {
-      if (*it < board.getSize())
-        begPos.push_back(*it);
-      else if (*it >= board.getSize() * (board.getSize() - 1))
-        endPos.push_back(*it);
-    }
-
-    vector<int> neighbors;
-    board.getNeighbors(*it, neighbors);
-    for (auto it2 = neighbors.begin(); it != neighbors.end(); ++it) {
-      if (board.get(*it2) == (isAIMoveFirst ? HexBoardPiece::X : HexBoardPiece::O))
-        moves.merge(*it2, *it);
-    }
-  }
-}
-*/
 

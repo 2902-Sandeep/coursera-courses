@@ -157,7 +157,7 @@ void HexGame::runGame()
     toggle = !toggle;
 
     cout << "Move " << turnNum << ": ";
-    isFinished = toggle ? player1->makeMove(*board, turnNum) : player2->makeMove(*board, turnNum);
+    isFinished = toggle ? player1->makeMove(*board) : player2->makeMove(*board);
 
     // display the result of the player's move
     printBreak();

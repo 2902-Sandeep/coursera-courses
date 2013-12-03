@@ -26,17 +26,22 @@ public:
   // Default constructor.
   HexPlayer(bool isFirstPlayer);
 
+  // Virtual destructor.
   virtual ~HexPlayer();
 
-  virtual bool makeMove(HexBoard &board, const int turnNum) = 0;
+  // Make a move on the board; must be defined in derived classes.
+  // @param board A reference to the board being played on.
+  // @return True if the move results in this player's victory, otherwise false.
+  virtual bool makeMove(HexBoard &board) = 0;
 
-  // Pure virtual function that outputs the player's name to console.
+  // Outputs the player's name to console.
   void displayName();
 
 protected:
   // The piece that this player uses.
   HexBoardPiece piece;
 
+  // The string representing the type of player this is.
   string playerType;
 
   // Tracks the nodes on one side of the board that the player has pieces at.
@@ -50,7 +55,7 @@ protected:
   // of connected components. Adapted from Kruskal's algorithm.
   DisjointSet<int> moves;
 
-  // Make a move on the board.
+  // Overloaded wrappers for making a move on the board.
   // @param board A reference to the board being played on.
   // @param position The alphanumeric position on the board to play the piece.
   // @return One of the 3 possible move results.
@@ -58,10 +63,13 @@ protected:
   // @param boardIndex The zero-based cell index on the board to play the piece.
   HexMoveResult move(HexBoard &board, const int boardIndex);
 
+  // Records the move on the board and updates internal states.
+  // @param board A reference to the board being played on.
+  // @param boardIndex The zero-based cell index on the board to play the piece.
+  // @return One of the 3 possible move results.
   HexMoveResult updateMove(HexBoard &board, const int boardIndex);
 
-  // Pure virtual function that records the positions of the player's
-  // pieces at the corresponding source/target board edges.
+  // Records the positions of the player's pieces at the corresponding source/target board edges.
   // @param boardSize The number of hexes on one side of the board.
   // @param boardIndex A valid cell index on the board.
   void updateBoardEdgePos(const int boardSize, const int boardIndex);
@@ -81,7 +89,7 @@ public:
 
   ~HexPlayerHuman();
 
-  virtual bool makeMove(HexBoard &board, const int turnNum);
+  virtual bool makeMove(HexBoard &board);
 
 };
 
@@ -93,7 +101,12 @@ public:
 
   ~HexPlayerAI();
 
-  virtual bool makeMove(HexBoard &board, const int turnNum);
+  virtual bool makeMove(HexBoard &board);
+
+private:
+  int evaluatePosition(const int curIdx, HexBoard &board, vector<int> &openIndices);
+
+  void updateDisjointSet(DisjointSet<int> &playerMoves, const int boardIndex, HexBoard &board);
 
 };
 

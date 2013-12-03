@@ -22,7 +22,7 @@ public:
   // Default constructor.
   HexGame();
 
-  // Default destructor.
+  // Destructor.
   ~HexGame();
 
   // Requests user input, initializes the game and runs the main game loop.
