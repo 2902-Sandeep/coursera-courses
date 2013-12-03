@@ -8,16 +8,11 @@
 
 #include <iostream>
 #include <string>
-#include <vector>
 #include <algorithm>
-#include <numeric>
 #include <cctype>
-#include <chrono>
-#include <random>
 
 #include "HexBoard.hpp"
 #include "HexPlayer.hpp"
-#include "DisjointSet.hpp"
 
 using namespace std;
 
@@ -37,16 +32,11 @@ private:
   // The playing board.
   HexBoard *board;
 
-  // The first player (connects east-west). Uses x.
+  // The first player (always connects east-west). Uses x.
   HexPlayer *player1;
-  //HexPlayerEastWest player1;
 
-  // The second player (connects north-south). Uses o.
+  // The second player (always connects north-south). Uses o.
   HexPlayer *player2;
-  //HexPlayerNorthSouth player2;
-
-  bool isPlayWithAI;
-  bool isAIMoveFirst;
 
   // Internal function that outputs a separator to the console (80 dashes).
   void printBreak();
@@ -61,24 +51,12 @@ private:
   // @return True to start the game, otherwise false to quit.
   bool checkStartGame();
 
-  void startHumanVsHuman();
+  // Internal function that runs the main game loop.
+  void runGame();
 
-  void startHumanVsAI();
-
-  // Internal function that handles and outputs a player's move each turn.
-  // @param player The current player.
-  // @param turnNum The current move number.
-  // @return True if the player's move resulted in a win, otherwise false.
-  bool moveHuman(HexPlayer *player, const int turnNum);
-
-  bool moveAI(HexPlayer *player, const int turnNum);
-
-  int evaluatePosition(HexPlayer *player, HexBoard &tempBoard, vector<int> &tempIndices, const int boardIndex);
-
-/*
-  void updateDisjointSet(DisjointSet<int> &moves, vector<int> &begPos, vector<int> &endPos);
-  void updateDisjointSet(DisjointSet<int> &moves, HexBoard &tempBoard, vector<int> &begPos, vector<int> &endPos);
-*/
+  // Determines if the given string is a non-empty positive integral number.
+  // @param s The string to check.
+  // @return True if the string represents a number, otherwise false.
   bool isNumber(const string &s);
 
 };
